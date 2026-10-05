@@ -1,0 +1,55 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum EventType {
+  APPLICATION_STATUS
+  LOAN_STATUS
+}
+
+// Append-only audit log of every webhook received, raw and unmodified.
+// This is the source of truth for analytics (funnel/timeline queries)
+// and lets us reprocess history if the derived tables below ever need a rebuild.
+model WebhookEvent {
+  id          BigInt    @id @default(autoincrement())
+  eventType   EventType
+  status      String
+  leadId      String
+  phoneNumber String?
+  eventTimestamp DateTime
+  data        Json?
+  rawPayload  Json
+  receivedAt  DateTime  @default(now())
+
+  // FlexSalary may retry delivery; this makes re-processing a no-op instead of a duplicate row.
+  @@unique([leadId, eventType, status, eventTimestamp], name: "dedupe_key")
+  @@index([leadId])
+  @@index([eventType, status])
+}
+
+// Latest known state per lead's application — upserted on every APPLICATION_STATUS event.
+model Application {
+  leadId          String   @id
+  phoneNumber     String?
+  status          String
+  rejectionReason String?
+  updatedAt       DateTime @updatedAt
+  createdAt       DateTime @default(now())
+}
+
+// Latest known state per lead's loan — upserted on every LOAN_STATUS event.
+model Loan {
+  leadId           String    @id
+  phoneNumber      String?
+  status           String
+  amount           Decimal?  @db.Decimal(14, 2)
+  disbursalDate    DateTime?
+  disbursalAmount  Decimal?  @db.Decimal(14, 2)
+  updatedAt        DateTime  @updatedAt
+  createdAt        DateTime  @default(now())
+}

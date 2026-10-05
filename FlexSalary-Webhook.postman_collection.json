@@ -1,0 +1,156 @@
+{
+  "info": {
+    "name": "FlexSalary Webhook",
+    "description": "Test collection for the FlexSalary APPLICATION_STATUS / LOAN_STATUS webhook receiver.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "base_url", "value": "http://localhost:3000" },
+    { "key": "auth_header_name", "value": "apikey" },
+    { "key": "api_key", "value": "test-secret-key" },
+    { "key": "lead_id", "value": "E16BE9D6DA564CA480F7F70BCF321CBDSH4UM3HX" },
+    { "key": "phone_number", "value": "9876543210" }
+  ],
+  "item": [
+    {
+      "name": "Health Check",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": { "raw": "{{base_url}}/health", "host": ["{{base_url}}"], "path": ["health"] }
+      }
+    },
+    {
+      "name": "Unauthorized (missing api key)",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"eventType\": \"APPLICATION_STATUS\",\n  \"status\": \"Waiting for documents\",\n  \"leadId\": \"{{lead_id}}\",\n  \"phoneNumber\": \"{{phone_number}}\",\n  \"timestamp\": \"2026-07-15T10:00:00.0000000+05:30\",\n  \"data\": null\n}"
+        },
+        "url": { "raw": "{{base_url}}/webhooks/flexsalary", "host": ["{{base_url}}"], "path": ["webhooks", "flexsalary"] }
+      }
+    },
+    {
+      "name": "APPLICATION_STATUS - Waiting for documents",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" },
+          { "key": "{{auth_header_name}}", "value": "{{api_key}}" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"eventType\": \"APPLICATION_STATUS\",\n  \"status\": \"Waiting for documents\",\n  \"leadId\": \"{{lead_id}}\",\n  \"phoneNumber\": \"{{phone_number}}\",\n  \"timestamp\": \"2026-07-15T10:00:00.0000000+05:30\",\n  \"data\": null\n}"
+        },
+        "url": { "raw": "{{base_url}}/webhooks/flexsalary", "host": ["{{base_url}}"], "path": ["webhooks", "flexsalary"] }
+      }
+    },
+    {
+      "name": "APPLICATION_STATUS - Documents under review",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" },
+          { "key": "{{auth_header_name}}", "value": "{{api_key}}" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"eventType\": \"APPLICATION_STATUS\",\n  \"status\": \"Documents under review\",\n  \"leadId\": \"{{lead_id}}\",\n  \"phoneNumber\": \"{{phone_number}}\",\n  \"timestamp\": \"2026-07-15T10:05:00.0000000+05:30\",\n  \"data\": null\n}"
+        },
+        "url": { "raw": "{{base_url}}/webhooks/flexsalary", "host": ["{{base_url}}"], "path": ["webhooks", "flexsalary"] }
+      }
+    },
+    {
+      "name": "APPLICATION_STATUS - Rejected",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" },
+          { "key": "{{auth_header_name}}", "value": "{{api_key}}" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"eventType\": \"APPLICATION_STATUS\",\n  \"status\": \"Rejected\",\n  \"leadId\": \"{{lead_id}}\",\n  \"phoneNumber\": \"{{phone_number}}\",\n  \"timestamp\": \"2026-07-15T10:09:00.0000000+05:30\",\n  \"data\": {\n    \"rejectionReason\": \"Income proof document not readable\"\n  }\n}"
+        },
+        "url": { "raw": "{{base_url}}/webhooks/flexsalary", "host": ["{{base_url}}"], "path": ["webhooks", "flexsalary"] }
+      }
+    },
+    {
+      "name": "APPLICATION_STATUS - Awaiting VKYC",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" },
+          { "key": "{{auth_header_name}}", "value": "{{api_key}}" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"eventType\": \"APPLICATION_STATUS\",\n  \"status\": \"Awaiting VKYC\",\n  \"leadId\": \"{{lead_id}}\",\n  \"phoneNumber\": \"{{phone_number}}\",\n  \"timestamp\": \"2026-07-15T10:12:00.0000000+05:30\",\n  \"data\": null\n}"
+        },
+        "url": { "raw": "{{base_url}}/webhooks/flexsalary", "host": ["{{base_url}}"], "path": ["webhooks", "flexsalary"] }
+      }
+    },
+    {
+      "name": "LOAN_STATUS - Awaiting Esign",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" },
+          { "key": "{{auth_header_name}}", "value": "{{api_key}}" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"eventType\": \"LOAN_STATUS\",\n  \"status\": \"Awaiting Esign\",\n  \"leadId\": \"{{lead_id}}\",\n  \"phoneNumber\": \"{{phone_number}}\",\n  \"timestamp\": \"2026-07-15T10:15:00.0000000+05:30\",\n  \"data\": null\n}"
+        },
+        "url": { "raw": "{{base_url}}/webhooks/flexsalary", "host": ["{{base_url}}"], "path": ["webhooks", "flexsalary"] }
+      }
+    },
+    {
+      "name": "LOAN_STATUS - Awaiting EMandate",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" },
+          { "key": "{{auth_header_name}}", "value": "{{api_key}}" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"eventType\": \"LOAN_STATUS\",\n  \"status\": \"Awaiting EMandate\",\n  \"leadId\": \"{{lead_id}}\",\n  \"phoneNumber\": \"{{phone_number}}\",\n  \"timestamp\": \"2026-07-15T10:18:00.0000000+05:30\",\n  \"data\": null\n}"
+        },
+        "url": { "raw": "{{base_url}}/webhooks/flexsalary", "host": ["{{base_url}}"], "path": ["webhooks", "flexsalary"] }
+      }
+    },
+    {
+      "name": "LOAN_STATUS - Pending For Disbursal",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" },
+          { "key": "{{auth_header_name}}", "value": "{{api_key}}" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"eventType\": \"LOAN_STATUS\",\n  \"status\": \"Pending For Disbursal\",\n  \"leadId\": \"{{lead_id}}\",\n  \"phoneNumber\": \"{{phone_number}}\",\n  \"timestamp\": \"2026-07-15T10:20:00.0000000+05:30\",\n  \"data\": null\n}"
+        },
+        "url": { "raw": "{{base_url}}/webhooks/flexsalary", "host": ["{{base_url}}"], "path": ["webhooks", "flexsalary"] }
+      }
+    },
+    {
+      "name": "LOAN_STATUS - Disbursed",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" },
+          { "key": "{{auth_header_name}}", "value": "{{api_key}}" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"eventType\": \"LOAN_STATUS\",\n  \"status\": \"Disbursed\",\n  \"leadId\": \"{{lead_id}}\",\n  \"phoneNumber\": null,\n  \"timestamp\": \"2026-07-15T10:22:42.1402558+05:30\",\n  \"data\": {\n    \"amount\": 90610.00,\n    \"disbursalDate\": \"2026-07-15T10:22:42.1402558+05:30\",\n    \"disbursalAmount\": 90610.00\n  }\n}"
+        },
+        "url": { "raw": "{{base_url}}/webhooks/flexsalary", "host": ["{{base_url}}"], "path": ["webhooks", "flexsalary"] }
+      }
+    }
+  ]
+}

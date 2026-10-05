@@ -1,0 +1,9 @@
+node_modules/
+.env
+
+# Local Claude settings (contain credentials)
+.claude/
+
+# Customer data / generated reports
+reports/
+*.xlsx

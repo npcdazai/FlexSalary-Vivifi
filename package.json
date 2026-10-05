@@ -1,0 +1,27 @@
+{
+  "name": "flexsalary-webhook-service",
+  "version": "1.0.0",
+  "description": "Receives FlexSalary APPLICATION_STATUS / LOAN_STATUS webhooks and persists them for analytics",
+  "type": "module",
+  "main": "src/index.js",
+  "scripts": {
+    "dev": "node --watch src/index.js",
+    "start": "node src/index.js",
+    "prisma:generate": "prisma generate",
+    "prisma:migrate": "prisma migrate dev",
+    "prisma:studio": "prisma studio"
+  },
+  "dependencies": {
+    "@aws-sdk/client-s3": "^3.1091.0",
+    "@clickhouse/client": "^1.23.1",
+    "@prisma/client": "^6.1.0",
+    "dotenv": "^16.4.5",
+    "exceljs": "^4.4.0",
+    "express": "^4.21.1",
+    "helmet": "^8.0.0",
+    "morgan": "^1.10.0"
+  },
+  "devDependencies": {
+    "prisma": "^6.1.0"
+  }
+}
